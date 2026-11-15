@@ -1,0 +1,1099 @@
+/* ==========================================================================
+   صفحه‌ی اطلاعات پرداخت — محمد صحرانورد
+
+   ۱. فونت            ۵. کارت بانکی        ۹. پانوشت
+   ۲. توکن‌های طراحی   ۶. دکمه‌ها و وضعیت    ۱۰. حرکت
+   ۳. پایه            ۷. راهنمای پرداخت    ۱۱. واکنش‌گرایی
+   ۴. چیدمان و معرفی   ۸. یادداشت‌ها        ۱۲. دسترس‌پذیری
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   ۱. فونت «رخ»
+   مسیرها نسبی‌اند: پوشه‌ی font باید کنار همین فایل (style.css) باشد.
+   همین مسیر نسبی هم در VS Code و هم روی GitHub Pages کار می‌کند؛
+   نام فایل‌ها به بزرگی و کوچکی حروف حساس است.
+   مرورگر فقط وزن‌هایی را دانلود می‌کند که در صفحه استفاده شده‌اند
+   (اینجا: Regular، SemiBold و ExtraBold).
+
+   ترتیب وزن‌ها مطابق جدول رسمی فونت است (از نازک به ضخیم):
+   HairLine ‹ Thin ‹ ExtraLight ‹ Light ‹ Normal ‹ Regular ‹ Medium ‹ SemiBold ‹
+   Bold ‹ UltraBold ‹ ExtraBold ‹ Black
+   چون CSS فقط ۹ نام استاندارد دارد، سه وزنِ میانی عدد میانی گرفته‌اند:
+   HairLine = 50، Normal = 350 و UltraBold = 750.
+   -------------------------------------------------------------------------- */
+
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 50;
+  src: url("font/Rokh-HairLine.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 100;
+  src: url("font/Rokh-Thin.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 200;
+  src: url("font/Rokh-ExtraLight.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 300;
+  src: url("font/Rokh-Light.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 350;
+  src: url("font/Rokh-Normal.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 400;
+  src: url("font/Rokh-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 500;
+  src: url("font/Rokh-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 600;
+  src: url("font/Rokh-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 700;
+  src: url("font/Rokh-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 750;
+  src: url("font/Rokh-UltraBold.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 800;
+  src: url("font/Rokh-ExtraBold.woff2") format("woff2"); }
+@font-face { font-family: "Rokh"; font-style: normal; font-display: swap; font-weight: 900;
+  src: url("font/Rokh-Black.woff2") format("woff2"); }
+
+
+/* --------------------------------------------------------------------------
+   ۲. توکن‌های طراحی
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: only light;
+
+  /* رنگ — کاغذ عاجی، مرکب تیره، زمرد (اعتماد و رونق) و طلایی (ارزش) */
+  --paper:        #F3F1EA;
+  --surface:      #FFFFFF;
+  --ink:          #0E2A2B;
+  --ink-soft:     #45605E;
+  --ink-mute:     #556B69;
+  --line:         rgba(14, 42, 43, .10);
+  --line-strong:  rgba(14, 42, 43, .17);
+
+  --emerald-950:  #052B26;
+  --emerald-800:  #094C40;
+  --emerald-700:  #0B5F4E;
+  --emerald-600:  #0E7560;
+  --emerald-50:   #E9F4EF;
+
+  --gold-700:     #8F6D22;
+  --gold-500:     #CBA658;
+  --gold-300:     #E5CC92;
+
+  --danger:       #A93A29;
+
+  /* تایپوگرافی — هر ۱۲ وزن «رخ» در بالا تعریف شده است؛ برای تغییر وزن‌ها کافی است
+     این سه عدد را عوض کنید (مثلاً ‎--w-heavy: 700‎ برای Bold یا 900 برای Black). */
+  --font: "Rokh", "Vazirmatn", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  --w-regular: 400;
+  --w-strong:  600;
+  --w-heavy:   800;
+
+  /* شعاع گوشه‌ها */
+  --r-sm: .875rem;
+  --r-md: 1.125rem;
+  --r-lg: 1.375rem;
+
+  /* حرکت */
+  --ease-out:    cubic-bezier(.22, 1, .36, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* حاشیه‌ی صفحه */
+  --gutter: 1.25rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   ۳. پایه
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: var(--w-regular);
+  line-height: 1.8;
+  color: var(--ink);
+  background-color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* نور ملایم پس‌زمینه؛ ثابت می‌ماند تا هنگام پیمایش کاغذ یکدست دیده شود */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70rem 42rem at 100% -8rem, rgba(203, 166, 88, .13), transparent 62%),
+    radial-gradient(56rem 44rem at 0% 22rem, rgba(14, 117, 96, .09), transparent 64%);
+}
+
+h1, h2, h3, p, ol, ul { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+
+::selection { background: var(--gold-300); color: var(--emerald-950); }
+
+.icon {
+  display: block;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--emerald-600);
+  outline-offset: 3px;
+}
+
+
+/* --------------------------------------------------------------------------
+   ۴. چیدمان و معرفی
+   -------------------------------------------------------------------------- */
+
+/* قاب صفحه: نقش‌های تزئینی را در لبه‌ی صفحه می‌بُرد تا هرگز پیمایش افقی ساخته نشود */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.layout {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: calc(28.75rem + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-block: calc(1.5rem + env(safe-area-inset-top, 0px)) 0;
+  padding-inline: max(var(--gutter), env(safe-area-inset-right, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  row-gap: 1.25rem;
+}
+
+.hero {
+  display: grid;
+  row-gap: .875rem;
+}
+
+/* متن‌ها و دکمه‌ها همیشه بالاتر از نقش پس‌زمینه‌ی کارت می‌مانند */
+.hero,
+.actions,
+.guide {
+  position: relative;
+  z-index: 1;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: .875rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  color: var(--gold-300);
+  background: linear-gradient(145deg, #17403F, var(--ink));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 10px 18px -12px rgba(14, 42, 43, .7);
+}
+
+.avatar .icon { width: 1.375rem; height: 1.375rem; }
+
+.identity__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.identity__name {
+  font-size: 1.375rem;
+  font-weight: var(--w-heavy);
+  line-height: 1.4;
+}
+
+.identity__role {
+  font-size: .9375rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.hero__lead {
+  max-width: 36ch;
+  font-size: .9375rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+
+/* --------------------------------------------------------------------------
+   ۵. کارت بانکی
+   نسبت ابعاد کارت دقیقاً استاندارد ISO/IEC 7810 ID-1 است (۸۵٫۶ × ۵۳٫۹۸ م‌م).
+   همه‌ی اندازه‌های داخل کارت ضریبی از عرض خود کارت‌اند (‎--cw‎ = یک درصد عرض)
+   تا در هر اندازه‌ای تناسب‌ها ثابت بماند.
+   -------------------------------------------------------------------------- */
+
+.wallet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 2.25rem;
+}
+
+.pay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1rem;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  perspective: 62.5rem;
+  container-type: inline-size;
+}
+
+/* پژواک طرح کارت روی کاغذ */
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -61.11% -38.55%;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1516 1200' fill='none' stroke='%230B5F4E'%3E%3Crect x='296' y='296' width='924' height='608' rx='73' stroke-opacity='0.170' vector-effect='non-scaling-stroke'/%3E%3Crect x='254' y='254' width='1008' height='692' rx='115' stroke-opacity='0.129' vector-effect='non-scaling-stroke'/%3E%3Crect x='204' y='204' width='1108' height='792' rx='165' stroke-opacity='0.093' vector-effect='non-scaling-stroke'/%3E%3Crect x='146' y='146' width='1224' height='908' rx='223' stroke-opacity='0.060' vector-effect='non-scaling-stroke'/%3E%3Crect x='80' y='80' width='1356' height='1040' rx='289' stroke-opacity='0.033' vector-effect='non-scaling-stroke'/%3E%3Crect x='6' y='6' width='1504' height='1188' rx='363' stroke-opacity='0.012' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.card__body {
+  --cw: 1cqw;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  aspect-ratio: 85.6 / 53.98;
+  padding: calc(var(--cw) * 6.2) calc(var(--cw) * 6.8) calc(var(--cw) * 5.8);
+  overflow: hidden;
+  border-radius: calc(var(--cw) * 4.6);
+  color: #fff;
+  background:
+    radial-gradient(115% 95% at 100% 0%, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 56%),
+    radial-gradient(85% 120% at 0% 100%, rgba(203, 166, 88, .26) 0%, rgba(203, 166, 88, 0) 58%),
+    linear-gradient(140deg, #0F7A63 0%, #0B5A4C 44%, #083B3D 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .24),
+    0 1px 2px rgba(5, 43, 38, .28),
+    0 16px 28px -14px rgba(5, 43, 38, .5),
+    0 40px 64px -34px rgba(5, 43, 38, .6);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .7s var(--ease-out);
+}
+
+/* مرورگرهای قدیمی‌تر که واحد cqw را نمی‌شناسند: تخمین از روی عرض صفحه */
+@supports not (width: 1cqw) {
+  .card__body { --cw: min((100vw - 2.5rem) / 100, 4.6px); }
+}
+
+.card.is-ready .card__body { cursor: pointer; }
+.card.is-tilting .card__body { transition-duration: .14s; }
+.card.is-ready .card__body:active { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(.988); }
+
+.card__pattern,
+.card__glare,
+.card__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.card__pattern {
+  z-index: -1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 856 540' fill='none' preserveAspectRatio='none'%3E%3Crect x='-90' y='495' width='300' height='210' rx='55.5' stroke='%23fff' stroke-opacity='0.15' vector-effect='non-scaling-stroke'/%3E%3Crect x='-157' y='448.1' width='434' height='303.8' rx='66.9' stroke='%23fff' stroke-opacity='0.14' vector-effect='non-scaling-stroke'/%3E%3Crect x='-230' y='397' width='580' height='406' rx='79.3' stroke='%23fff' stroke-opacity='0.12' vector-effect='non-scaling-stroke'/%3E%3Crect x='-309' y='341.7' width='738' height='516.6' rx='92.7' stroke='%23EAD59F' stroke-opacity='0.40' vector-effect='non-scaling-stroke'/%3E%3Crect x='-394' y='282.2' width='908' height='635.6' rx='107.2' stroke='%23fff' stroke-opacity='0.10' vector-effect='non-scaling-stroke'/%3E%3Crect x='-485' y='218.5' width='1090' height='763' rx='122.7' stroke='%23fff' stroke-opacity='0.08' vector-effect='non-scaling-stroke'/%3E%3Crect x='-582' y='150.6' width='1284' height='898.8' rx='139.1' stroke='%23fff' stroke-opacity='0.07' vector-effect='non-scaling-stroke'/%3E%3Crect x='-685' y='78.5' width='1490' height='1043' rx='156.7' stroke='%23fff' stroke-opacity='0.06' vector-effect='non-scaling-stroke'/%3E%3Crect x='-794' y='2.2' width='1708' height='1195.6' rx='175.2' stroke='%23fff' stroke-opacity='0.05' vector-effect='non-scaling-stroke'/%3E%3Crect x='-909' y='-78.3' width='1938' height='1356.6' rx='194.7' stroke='%23fff' stroke-opacity='0.04' vector-effect='non-scaling-stroke'/%3E%3Crect x='-1030' y='-163' width='2180' height='1526' rx='215.3' stroke='%23fff' stroke-opacity='0.03' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+/* بازتاب نوری که با حرکت نشانگر جابه‌جا می‌شود */
+.card__glare {
+  z-index: 2;
+  opacity: 0;
+  background: radial-gradient(calc(var(--cw) * 62) circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 62%);
+  transition: opacity .35s ease;
+}
+
+.card.is-tilting .card__glare { opacity: 1; }
+
+/* برق گذرا: یک بار هنگام ورود و هر بار پس از کپی */
+.card__sheen {
+  z-index: 3;
+  inset: -10% -70%;
+  opacity: 0;
+  background: linear-gradient(102deg, rgba(255, 255, 255, 0) 43%, rgba(255, 255, 255, .30) 50%, rgba(255, 255, 255, 0) 57%);
+  animation: sheen 1.1s .95s var(--ease-out) both;
+}
+
+.card.is-sheen .card__sheen { animation: sheen-again .95s var(--ease-out) both; }
+
+.card__top,
+.card__bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--cw) * 4);
+}
+
+.card__top { align-items: flex-start; }
+.card__bottom { align-items: flex-end; }
+
+.card__bank {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cw) * 2.2);
+  font-size: max(.8125rem, calc(var(--cw) * 4.3));
+  font-weight: var(--w-strong);
+  line-height: 1.4;
+}
+
+.card__bank .icon {
+  width: calc(var(--cw) * 5.6);
+  height: calc(var(--cw) * 5.6);
+  min-width: 1.125rem;
+  min-height: 1.125rem;
+  color: var(--gold-300);
+}
+
+.card__chip {
+  flex: none;
+  width: calc(var(--cw) * 11.4);
+  height: auto;
+  filter: drop-shadow(0 1px 1px rgba(5, 43, 38, .35));
+}
+
+.card__number {
+  align-self: center;
+  min-width: 0;
+}
+
+/* شماره کارت — توضیح کامل در script.js
+   • dir=ltr و unicode-bidi: isolate ترتیب ارقام را در صفحه‌ی راست‌به‌چپ ثابت نگه می‌دارد.
+   • فاصله‌ی بین گروه‌ها فقط «ظاهری» است (‎::before‎) و در متن صفحه وجود ندارد؛
+     پس حتی با انتخاب دستی هم شماره بدون فاصله کپی می‌شود. */
+.pan {
+  display: block;
+  direction: ltr;
+  unicode-bidi: isolate;
+  margin-inline-end: -.035em;
+  font-size: calc(var(--cw) * 6.5 * var(--pan-fit, 1));
+  font-weight: var(--w-strong);
+  line-height: 1.25;
+  letter-spacing: .035em;
+  word-spacing: .1em;
+  white-space: nowrap;
+  text-align: justify;
+  text-align-last: justify;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-shadow: 0 1px 1px rgba(5, 43, 38, .35);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.pan__group + .pan__group::before { content: " "; }
+.pan__digit { display: inline-block; }
+
+/* پس از اجرای اسکریپت، چهار گروه با فاصله‌ی کاملاً مساوی در عرض کارت پخش می‌شوند */
+.pan.is-built {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pan.is-built .pan__group { display: block; }
+.pan.is-built .pan__group::before { content: none; }
+
+.pan.is-wave .pan__digit {
+  animation: digit-wave .52s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 24ms);
+}
+
+.card ::selection { background: var(--gold-300); color: var(--emerald-950); text-shadow: none; }
+
+.card__holder {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.card__label {
+  font-size: max(.6875rem, calc(var(--cw) * 3));
+  line-height: 1.5;
+  color: rgba(255, 255, 255, .8);
+}
+
+.card__holder-name {
+  font-size: max(.9375rem, calc(var(--cw) * 4.8));
+  font-weight: var(--w-strong);
+  line-height: 1.45;
+}
+
+.card__hint {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: max(1.875rem, calc(var(--cw) * 8.6));
+  height: max(1.875rem, calc(var(--cw) * 8.6));
+  border-radius: 32%;
+  color: #fff;
+  background: rgba(255, 255, 255, .12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18);
+  transition: background-color .3s ease, color .3s ease, transform .3s var(--ease-spring);
+}
+
+.card__hint .icon {
+  grid-area: 1 / 1;
+  width: 52%;
+  height: 52%;
+  transition: opacity .25s ease, transform .35s var(--ease-spring);
+}
+
+.card__hint-check { opacity: 0; transform: scale(.4) rotate(-20deg); stroke-width: 2.2; }
+
+.card__body:hover .card__hint { background: rgba(255, 255, 255, .2); }
+
+.card.is-copied .card__hint { color: var(--emerald-950); background: var(--gold-300); transform: scale(1.06); }
+.card.is-copied .card__hint-copy { opacity: 0; transform: scale(.4) rotate(20deg); }
+.card.is-copied .card__hint-check { opacity: 1; transform: none; }
+
+
+/* --------------------------------------------------------------------------
+   ۶. دکمه‌ها و وضعیت
+   -------------------------------------------------------------------------- */
+
+.actions {
+  display: grid;
+  row-gap: .75rem;
+}
+
+.actions__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: .75rem;
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .625rem;
+  min-height: 3rem;
+  margin: 0;
+  padding: .5rem 1rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  font: inherit;
+  font-weight: var(--w-strong);
+  line-height: 1.5;
+  color: inherit;
+  text-decoration: none;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease, transform .2s var(--ease-out);
+}
+
+.btn:active { transform: scale(.985); }
+
+.btn__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.btn__icon .icon {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  transition: opacity .2s ease, transform .35s var(--ease-spring);
+}
+
+.btn__icon .btn__icon-done { opacity: 0; stroke-width: 2.2; }
+.btn__icon-done path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .2s ease; }
+
+.btn[data-state="done"] .btn__icon-idle { opacity: 0; transform: scale(.4) rotate(18deg); }
+.btn[data-state="done"] .btn__icon-done { opacity: 1; }
+.btn[data-state="done"] .btn__icon-done path { stroke-dashoffset: 0; transition: stroke-dashoffset .38s var(--ease-out) .12s; }
+
+/* دکمه‌ی اصلی */
+.btn--primary {
+  isolation: isolate;
+  width: 100%;
+  min-height: 3.5rem;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  font-size: 1.0625rem;
+  color: #fff;
+  background-color: var(--ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .14),
+    0 14px 24px -16px rgba(14, 42, 43, .85);
+}
+
+.btn--primary .btn__icon { color: var(--gold-300); transition: color .3s ease; }
+
+.btn__fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(140deg, var(--emerald-600), var(--emerald-700) 55%, var(--emerald-800));
+  clip-path: circle(0% at var(--fx, 50%) 50%);
+  transition: clip-path .45s ease;
+}
+
+.btn--primary[data-state="done"] { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 14px 24px -16px rgba(11, 95, 78, .9); }
+.btn--primary[data-state="done"] .btn__fill { clip-path: circle(150% at var(--fx, 50%) 50%); transition: clip-path .7s var(--ease-out); }
+.btn--primary[data-state="done"] .btn__icon { color: #fff; }
+
+.btn__label {
+  display: grid;
+  overflow: hidden;
+}
+
+.btn__label > * {
+  grid-area: 1 / 1;
+  transition: transform .45s var(--ease-out), opacity .3s ease;
+}
+
+.btn__label-done { opacity: 0; transform: translateY(110%); }
+.btn[data-state="done"] .btn__label-idle { opacity: 0; transform: translateY(-110%); }
+.btn[data-state="done"] .btn__label-done { opacity: 1; transform: none; }
+
+.btn.is-shake { animation: shake .42s ease both; }
+
+/* دکمه‌های فرعی */
+.btn--quiet {
+  padding-inline: .75rem;
+  font-size: .9375rem;
+  color: var(--ink);
+  background-color: rgba(255, 255, 255, .55);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.btn--quiet .btn__icon { width: 1.25rem; height: 1.25rem; color: var(--emerald-700); }
+.btn--quiet[data-state="done"] { color: var(--emerald-700); background-color: var(--emerald-50); box-shadow: inset 0 0 0 1px rgba(14, 117, 96, .35); }
+
+@media (hover: hover) {
+  .btn--primary:hover { background-color: #153A3B; transform: translateY(-1px); }
+  .btn--primary:hover:active { transform: scale(.985); }
+  .btn--quiet:hover { background-color: var(--surface); box-shadow: inset 0 0 0 1px rgba(14, 42, 43, .3), 0 8px 16px -12px rgba(14, 42, 43, .35); }
+}
+
+/* خط وضعیت */
+.status {
+  min-height: 1.4rem;
+  font-size: .8125rem;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--ink-mute);
+  transition: color .25s ease;
+}
+
+.status[data-tone="success"] { color: var(--emerald-700); }
+.status[data-tone="error"] { color: var(--danger); }
+.status.is-fresh { animation: status-in .4s var(--ease-out) both; }
+
+/* ژتون‌های طلایی که هنگام کپی از روی کارت به سمت دکمه می‌روند (ساخته‌شده در script.js) */
+.token-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.token {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.token__chip {
+  display: block;
+  padding: .1em .42em .06em;
+  border-radius: .42em;
+  direction: ltr;
+  font-family: var(--font);
+  font-weight: var(--w-strong);
+  line-height: 1.3;
+  letter-spacing: .035em;
+  white-space: nowrap;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--emerald-950);
+  background: linear-gradient(180deg, #F3E2B1, var(--gold-500));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .6),
+    0 8px 14px -8px rgba(5, 43, 38, .7);
+  will-change: transform, opacity;
+}
+
+
+/* --------------------------------------------------------------------------
+   ۷. راهنمای پرداخت
+   -------------------------------------------------------------------------- */
+
+.guide {
+  display: grid;
+  row-gap: 1rem;
+  margin-block-start: 1.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.125rem;
+  font-weight: var(--w-heavy);
+  line-height: 1.5;
+}
+
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to left, var(--line-strong), rgba(14, 42, 43, 0));
+}
+
+.steps {
+  display: grid;
+  gap: .75rem;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  align-content: start;
+  padding: 1.125rem 1.25rem;
+  border-radius: var(--r-lg);
+  background-color: var(--surface);
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    0 14px 24px -22px rgba(14, 42, 43, .5);
+}
+
+.step__icon {
+  display: grid;
+  place-items: center;
+  grid-row: 1 / span 2;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: .875rem;
+  color: var(--emerald-700);
+  background-color: var(--emerald-50);
+}
+
+.step__index {
+  position: absolute;
+  inset-block-start: .875rem;
+  inset-inline-end: 1.125rem;
+  font-size: 1.5rem;
+  font-weight: var(--w-heavy);
+  line-height: 1;
+  color: var(--gold-500);
+  opacity: .55;
+}
+
+.step__title {
+  grid-column: 2;
+  padding-inline-end: 1.75rem;
+  font-size: 1rem;
+  font-weight: var(--w-strong);
+  line-height: 1.6;
+}
+
+.step__text {
+  grid-column: 2;
+  margin-block-start: .125rem;
+  font-size: .875rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+
+/* --------------------------------------------------------------------------
+   ۸. یادداشت‌ها
+   -------------------------------------------------------------------------- */
+
+.notes {
+  display: grid;
+  border-radius: var(--r-lg);
+  background-color: rgba(255, 255, 255, .5);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: .875rem;
+  padding: 1rem 1.25rem;
+  font-size: .875rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+.note + .note { border-block-start: 1px solid var(--line); }
+
+.note .icon {
+  margin-block-start: .2rem;
+  color: var(--emerald-600);
+}
+
+
+/* --------------------------------------------------------------------------
+   ۹. پانوشت
+   -------------------------------------------------------------------------- */
+
+.footer {
+  flex: none;
+  width: 100%;
+  max-width: calc(28.75rem + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-block: 2.5rem calc(2.25rem + env(safe-area-inset-bottom, 0px));
+  padding-inline: max(var(--gutter), env(safe-area-inset-right, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+  display: grid;
+  row-gap: 2rem;
+  text-align: center;
+}
+
+.contacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.contact {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.75rem;
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  font-size: .875rem;
+  font-weight: var(--w-strong);
+  line-height: 1.5;
+  color: var(--ink);
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, .55);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition: background-color .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+.contact .icon { width: 1.125rem; height: 1.125rem; color: var(--emerald-700); }
+
+@media (hover: hover) {
+  .contact:hover { color: var(--emerald-700); background-color: var(--surface); box-shadow: inset 0 0 0 1px rgba(14, 117, 96, .45); }
+}
+
+.footer__thanks {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.footer__thanks::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 1.5rem;
+  height: 1px;
+  background: linear-gradient(to left, rgba(14, 42, 43, 0), var(--line-strong) 22%, var(--line-strong) 78%, rgba(14, 42, 43, 0));
+}
+
+.footer__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: var(--gold-700);
+  background-color: var(--paper);
+  box-shadow:
+    inset 0 0 0 1px var(--gold-500),
+    0 0 0 .625rem var(--paper);
+}
+
+.footer__mark .icon { width: 1.375rem; height: 1.375rem; }
+
+.footer__slogan {
+  margin-block-start: 1rem;
+  font-size: 1.0625rem;
+  font-weight: var(--w-heavy);
+  line-height: 1.7;
+}
+
+.footer__sign {
+  margin-block-start: .125rem;
+  font-size: .8125rem;
+  line-height: 1.7;
+  color: var(--ink-mute);
+}
+
+
+/* --------------------------------------------------------------------------
+   ۱۰. حرکت
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  animation: rise .8s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 40ms);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(.875rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes sheen {
+  0%   { opacity: 0; transform: translateX(-62%); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(62%); }
+}
+
+@keyframes sheen-again {
+  0%   { opacity: 0; transform: translateX(-62%); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(62%); }
+}
+
+@keyframes digit-wave {
+  0%   { transform: translateY(0); color: #fff; }
+  38%  { transform: translateY(-.16em); color: var(--gold-300); }
+  100% { transform: translateY(0); color: #fff; }
+}
+
+@keyframes status-in {
+  from { opacity: 0; transform: translateY(.25rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-.375rem); }
+  40% { transform: translateX(.375rem); }
+  60% { transform: translateX(-.25rem); }
+  80% { transform: translateX(.25rem); }
+}
+
+
+/* --------------------------------------------------------------------------
+   ۱۱. واکنش‌گرایی — طراحی از موبایل آغاز می‌شود و برای نمایشگرهای بزرگ‌تر گسترش می‌یابد
+   -------------------------------------------------------------------------- */
+
+/* گوشی‌های باریک (کمتر از ۳۶۰ پیکسل) */
+@media (max-width: 22.4375rem) {
+  :root { --gutter: 1rem; }
+
+  .actions__row { column-gap: .5rem; }
+
+  .btn--quiet {
+    gap: .4375rem;
+    padding-inline: .5rem;
+    font-size: .875rem;
+  }
+
+  .btn--quiet .btn__icon { width: 1.125rem; height: 1.125rem; }
+}
+
+/* گوشی‌های بزرگ */
+@media (min-width: 26rem) {
+  .hero { row-gap: 1rem; }
+  .identity__name { font-size: 1.5rem; }
+}
+
+/* تبلت و دسکتاپ: معرفی در یک ستون، کارت در ستون دیگر */
+@media (min-width: 46rem) {
+  :root { --gutter: 2rem; }
+
+  .layout,
+  .footer { max-width: 66rem; }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    column-gap: clamp(2rem, 5vw, 4rem);
+    row-gap: clamp(3rem, 6vw, 4.5rem);
+    align-items: center;
+    padding-block-start: calc(clamp(2.5rem, 7vh, 5rem) + env(safe-area-inset-top, 0px));
+  }
+
+  .hero { row-gap: 1.25rem; }
+
+  .identity {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
+  }
+
+  .avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.125rem;
+  }
+
+  .avatar .icon { width: 1.5rem; height: 1.5rem; }
+
+  .identity__text {
+    flex-direction: column-reverse;
+    gap: .5rem;
+  }
+
+  .identity__role {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: 1.0625rem;
+    font-weight: var(--w-strong);
+    color: var(--emerald-700);
+  }
+
+  .identity__role::before {
+    content: "";
+    width: 1.75rem;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--gold-500);
+  }
+
+  .identity__name {
+    font-size: clamp(2.5rem, .6rem + 5.2vw, 4.75rem);
+    line-height: 1.16;
+  }
+
+  .identity__name span { display: block; }
+
+  .hero__lead {
+    max-width: 27ch;
+    font-size: clamp(1rem, .8rem + .45vw, 1.1875rem);
+  }
+
+  .guide {
+    grid-column: 1 / -1;
+    row-gap: 1.5rem;
+    margin-block-start: 0;
+  }
+
+  .section-title { font-size: 1.375rem; }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.5rem;
+  }
+
+  .step__icon {
+    grid-row: auto;
+    margin-block-end: 1rem;
+  }
+
+  .step__index {
+    inset-block-start: 1.5rem;
+    inset-inline-end: 1.5rem;
+    font-size: 2rem;
+  }
+
+  .step__title,
+  .step__text { grid-column: 1; }
+
+  .step__title { padding-inline-end: 0; font-size: 1.0625rem; }
+
+  .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .note { padding: 1.125rem 1.5rem; }
+  .note + .note { border-block-start: 0; border-inline-start: 1px solid var(--line); }
+
+  .footer { padding-block-start: 3.5rem; }
+  .footer__slogan { font-size: 1.25rem; }
+}
+
+@supports not (width: 1cqw) {
+  @media (min-width: 46rem) {
+    .card__body { --cw: min(.44vw, 4.6px); }
+  }
+}
+
+/* دسکتاپ: ستون کارت به اندازه‌ی نهایی خود می‌رسد */
+@media (min-width: 64rem) {
+  :root { --gutter: 2.5rem; }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 28.75rem;
+    column-gap: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .wallet { row-gap: 2.75rem; }
+  .pay { row-gap: 1.25rem; }
+  .steps { gap: 1.25rem; }
+}
+
+
+/* --------------------------------------------------------------------------
+   ۱۲. دسترس‌پذیری: احترام به تنظیم «کاهش حرکت» دستگاه
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .card__sheen { display: none; }
+}
